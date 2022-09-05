@@ -39,34 +39,14 @@ jobs:
           sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           sudo flatpak install flathub org.freedesktop.Platform/x86_64/19.08 org.freedesktop.Sdk/x86_64/19.08 org.electronjs.Electron2.BaseApp/x86_64/stable -y
 
-<<<<<<< HEAD
-            - name: Make and Publish (WINDOWS)
+      - name: Make and Publish (WINDOWS)
               if: startsWith(matrix.os, 'windows')
               run: npm run publish-windows
               env:
                   GITHUB_TOKEN: ${{ secrets.BUILD_TOKEN }}
 
-            - name: Make and Publish (Ubuntu)
+      - name: Make and Publish (Ubuntu)
               if: startsWith(matrix.os, 'ubuntu')
               run: npm run publish
               env:
                   GITHUB_TOKEN: ${{ secrets.BUILD_TOKEN }}
-=======
-      - name: Make and Publish (Ubuntu)
-        if: startsWith(matrix.os, 'ubuntu')
-        run: yarn run publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.BUILD_TOKEN }}
-
-      - name: Make and Publish (WINDOWS)
-        if: startsWith(matrix.os, 'windows')
-        run: yarn run publish-windows
-        env:
-          GITHUB_TOKEN: ${{ secrets.BUILD_TOKEN }}
-        
-      - name: Make and Publish (MAC)
-        if: startsWith(matrix.os, 'macos')
-        run: yarn run publish-mac
-        env:
-          GITHUB_TOKEN: ${{ secrets.BUILD_TOKEN }}
->>>>>>> 3fcca491d8b7c72cef63fe51c1e88755b0c059ba
