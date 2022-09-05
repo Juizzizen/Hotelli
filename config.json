@@ -1,6 +1,6 @@
 {
 	"mainURL": "http://play.juizzihosting.com",
-	"repositoryName": "Juizzizen/penguin",
+	"repositoryName": "juizzizen/penguin",
 	"discordRpc": {
 		"enable": false,
 		"discordAppId": "",
