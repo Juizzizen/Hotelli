@@ -1,123 +1,73 @@
-const { app, BrowserWindow, autoUpdater } = require("electron");
-const path = require("path");
+const { app, BrowserWindow } = require('electron')
+const discordRpc = require('discord-rpc')
+const path = require('path')
+const config = require('../config.json')
 
-if (process.platform != "darwin") require("update-electron-app")({ repo: "New-Club-Penguin/NewCP-App-Build" });
-const discord_client = require("discord-rich-presence")("793878460157788220");
+require('update-electron-app')({ repo: config.repositoryName })
 
-const ALLOWED_ORIGINS = [
-  "http://juizzihosting.com",
-  "https://play.juizzihosting.com",
-];
+if (require('electron-squirrel-startup')) {
+	app.quit()
+
+	return
+}
+
+const appStart = Date.now()
+const discordApplicationId = config.discordRpc.discordAppId
+const mainURL = config.mainURL
 const pluginPaths = {
-  win32: path.join(path.dirname(__dirname), "lib/pepflashplayer.dll"),
-  darwin: path.join(path.dirname(__dirname), "lib/PepperFlashPlayer.plugin"),
-  linux: path.join(path.dirname(__dirname), "lib/libpepflashplayer.so"),
-};
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require("electron-squirrel-startup")) { // eslint-disable-line global-require
-  app.quit();
-  process.exit(0); // because squirrel
+	win32: path.join(path.dirname(__dirname), 'lib/pepflashplayer.dll'),
+	darwin: path.join(path.dirname(__dirname), 'lib/PepperFlashPlayer.plugin'),
+	linux: path.join(path.dirname(__dirname), 'lib/libpepflashplayer.so')
 }
 
-if (process.platform === "linux") app.commandLine.appendSwitch("no-sandbox");
-const pluginName = pluginPaths[process.platform];
-console.log("pluginName", pluginName);
+let rpc
+if (config.discordRpc.enable) {
+	discordRpc.register(discordApplicationId)
+	rpc = new discordRpc.Client({ transport: 'ipc' })
+}
 
-app.commandLine.appendSwitch("ppapi-flash-path", pluginName);
-app.commandLine.appendSwitch("ppapi-flash-version", "31.0.0.122");
-app.commandLine.appendSwitch("ignore-certificate-errors");
+if (process.platform === 'linux') app.commandLine.appendSwitch('no-sandbox')
+const pluginName = pluginPaths[process.platform]
 
-let mainWindow;
+app.commandLine.appendSwitch('ppapi-flash-path', pluginName)
+app.commandLine.appendSwitch('ppapi-flash-version', '31.0.0.122')
+app.commandLine.appendSwitch('ignore-certificate-errors')
+
 const createWindow = () => {
-  // Create the browser window.
-  let splashWindow = new BrowserWindow({
-    width: 600,
-    height: 320,
-    frame: false,
-    transparent: true,
-    show: false,
-  });
+	const mainWindow = new BrowserWindow({
+		width: config.windowSettings.width,
+		height: config.windowSettings.height,
+		autoHideMenuBar: true,
+		useContentSize: true,
+		webPreferences: {
+			plugins: true
+		}
+	})
 
-  splashWindow.setResizable(false);
-  splashWindow.loadURL(
-    "file://" + path.join(path.dirname(__dirname), "src/index.html"),
-  );
-  splashWindow.on("closed", () => (splashWindow = null));
-  splashWindow.webContents.on("did-finish-load", () => {
-    splashWindow.show();
-  });
+	mainWindow.loadURL(mainURL)
+	mainWindow.maximize()
 
-  mainWindow = new BrowserWindow({
-    autoHideMenuBar: true,
-    useContentSize: true,
-    show: false,
-    webPreferences: {
-      plugins: true,
-    },
-  });
-
-  mainWindow.webContents.on("did-finish-load", () => {
-    if (splashWindow) {
-      splashWindow.close();
-      mainWindow.show();
-    }
-  });
-  discord_client.updatePresence({
-    state: "Waddling",
-    details: "New Club Penguin",
-    startTimestamp: Date.now(),
-    largeImageKey: "ncpapp",
-    instance: true,
-  });
-
-  mainWindow.webContents.on("will-navigate", (event, urlString) => {
-    if (!ALLOWED_ORIGINS.includes(new URL(urlString).origin)) {
-      event.preventDefault();
-    }
-  });
-
-  mainWindow.webContents.session.clearHostResolverCache();
-
-  new Promise((resolve) =>
-    setTimeout(() => {
-      mainWindow.loadURL("https://newcp.net/");
-      resolve();
-    }, 5000)
-  );
-};
-
-if (app.requestSingleInstanceLock()) {
-  app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
-    // Someone tried to run a second instance, we should focus our window.
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
-    }
-  });
-
-  app.on("ready", createWindow);
-
-  app.setAsDefaultProtocolClient("newcp");
-
-  // Quit when all windows are closed, except on macOS. There, it's common
-  // for applications and their menu bar to stay active until the user quits
-  // explicitly with Cmd + Q.
-  app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") {
-      app.quit();
-      discord_client.disconnect();
-      process.exit(0); // because squirrel
-    }
-  });
-
-  app.on("activate", () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
-} else {
-  app.quit();
-  process.exit(0); // because squirrel
+	if (rpc) {
+		rpc.on('ready', () => {
+			rpc.setActivity({
+				details: config.discordRpc.activityTitle,
+				state: config.discordRpc.activityDescription,
+				startTimestamp: appStart,
+				largeImageKey: 'large',
+				buttons: config.discordRpc.buttons
+			}).catch(function () {})
+		})
+	}
 }
+
+app.on('ready', createWindow)
+
+app.on('window-all-closed', () => {
+	if (rpc && rpc.user) rpc.destroy()
+
+	if (process.platform !== 'darwin') {
+		app.quit()
+
+		process.exit(0)
+	}
+})

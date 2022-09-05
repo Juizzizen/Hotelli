@@ -1,0 +1,20 @@
+{
+	"mainURL": "http://play.juizzihosting.com",
+	"repositoryName": "Juizzizen/penguin",
+	"discordRpc": {
+		"enable": false,
+		"discordAppId": "",
+		"activityTitle": "",
+		"activityDescription": "",
+		"buttons": [
+			{
+				"label": "Nope",
+				"url": ""
+			}
+		]
+	},
+	"windowSettings": {
+		"width": 1280,
+		"height": 720
+	}
+}
