@@ -1,15 +1,15 @@
 {
-	"mainURL": "http://play.juizzihosting.com",
-	"repositoryName": "juizzizen/penguin",
+	"mainURL": "https://hotelli.komlio.xyz",
+	"repositoryName": "Juizzizen/Penguin",
 	"discordRpc": {
 		"enable": false,
-		"discordAppId": "",
-		"activityTitle": "",
-		"activityDescription": "",
+		"discordAppId": "995035289263292426",
+		"activityTitle": "Hotelli, Komlio",
+		"activityDescription": "FUckyouuuuuuuuuuuu",
 		"buttons": [
 			{
-				"label": "Nope",
-				"url": ""
+				"label": "Hello :D",
+				"url": "https://juizzi.fi"
 			}
 		]
 	},
