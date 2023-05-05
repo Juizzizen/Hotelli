@@ -1,5 +1,5 @@
 {
-	"name": "Hotelli Komlio",
+	"name": "hotelli-komlio",
 	"productName": "",
 	"version": "1.0.0",
 	"description": "Hotelli Komlio Client",
@@ -48,15 +48,15 @@
 				{
 					"name": "@electron-forge/maker-deb",
 					"config": {
-						"name": "Klubi-Pingviini-Linux",
+						"name": "Hotelli-Komlio-Linux",
 						"version": "1.0.5"
 					}
 				},
 				{
 					"name": "@electron-forge/maker-flatpak",
 					"config": {
-						"genericName": "cpc-linuxSandbox",
-						"productName": "cpc-linuxSandbox",
+						"genericName": "hkc-linuxSandbox",
+						"productName": "hkc-linuxSandbox",
 						"categories": [
 							"Game"
 						],
@@ -70,7 +70,7 @@
 					"config": {
 						"repository": {
 							"owner": "Juizzizen",
-							"name": "Penguin"
+							"name": "Hotelli"
 						},
 						"prerelease": false,
 						"draft": false
