@@ -1,3 +1,3 @@
-# Club Penguin Client
+# Hotelli Komlio Client
 
-WIP Flashport for Club Penguin
+WIP Flashport for Hotelli Komlio
