@@ -1,6 +1,6 @@
 {
 	"name": "hotelli-komlio",
-	"productName": "",
+	"productName": "hotellikomlio",
 	"version": "1.0.0",
 	"description": "Hotelli Komlio Client",
 	"main": "src/main.js",
@@ -29,7 +29,7 @@
 						"name": "hkc-windows",
 						"authors": "Hotelli Komlio",
 						"title": "Hotelli Komlio",
-						"iconUrl": ""
+						"iconUrl": "hotelli.komlio.xyz/assets/images/favicon.ico"
 					}
 				},
 				{
@@ -70,7 +70,7 @@
 					"config": {
 						"repository": {
 							"owner": "Juizzizen",
-							"name": "Hotelli"
+							"name": "Penguin"
 						},
 						"prerelease": false,
 						"draft": false
